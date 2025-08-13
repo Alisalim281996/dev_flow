@@ -20,8 +20,6 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
 
         if (item.route === "/profile") {
           if (userId) item.route = `${item.route}/${userId}`;
-          // if exist user id go to it if not dont go any where
-          // http://localhost:3000/profile/1
           else return null;
         }
         const LinkComponent = (

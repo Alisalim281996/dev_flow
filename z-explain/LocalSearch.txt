@@ -1,0 +1,97 @@
+
+https://example.com/products?query=samsung
+
+1-const pathname = usePathname(); ==>pathname === "/products"
+
+2-const router = useRouter(); change the url 
+
+router.push("/products?query=iphone");
+
+https://example.com/products?query=iphone
+
+3-const searchParams = useSearchParams();
+
+4-const query = searchParams.get("query") || ""; searchParams.get("query") === "samsung"
+
+5-const [searchQuery, setSearchQuery] = useState(query); query === "samsung"
+
+
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchQuery) {
+        const newUrl = formUrlQuery({
+          params: searchParams.toString(),
+          key: "query",
+          value: searchQuery,
+        });
+
+        router.push(newUrl, { scroll: false });
+      } else {
+        if (pathname === route) {//route in this way / 
+          const newUrl = removeKeysFromQuery({
+            params: searchParams.toString(),
+            keysToRemove: ["query"],
+          });
+          router.push(newUrl, { scroll: false });
+        }
+      }
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery, router, route, searchParams, pathname]);
+
+
+1-useEffect(() => { ... }, [searchQuery, ...]);
+
+React Hook هذا هو 
+
+[searchQuery, router, route, searchParams, pathname] يشتغل كل مرة تتغير فيها وحدة من القيم داخل 
+
+searchQuery نستخدمه لمراقبة التغير على 
+
+2-const delayDebounceFn = setTimeout(() => { ... }, 1000)
+
+نأجل تنفيذ الكود الداخلي لمدة 1 ثانية
+
+Debouncing هذا يسمى 
+
+الغرض: ننتظر المستخدم يكمل كتابة الكلمة قبل ما نحدث الرابط
+
+3-if (searchQuery) {
+        const newUrl = formUrlQuery({
+          params: searchParams.toString(),
+          key: "query",
+          value: searchQuery,
+        });
+
+        router.push(newUrl, { scroll: false });
+}
+
+(مثلاً "iphone") إذا المستخدم كتب كلمة في البحث 
+
+في رابط الصفحة query هي دالة تفترض أنها تضيف أو تحدث قيمة :formUrlQuery
+
+يغير عنوان الصفحة بدون ما يعيد تحميلها :router.push
+
+حتى يبقى المستخدم في نفس المكان بدون ما ينزل أو يصعد الصفحة :scroll: false
+
+/products?query=iphone :النتيجة
+
+
+4-
+else {
+    if (pathname === route) {
+      const newUrl = removeKeysFromQuery({
+        params: searchParams.toString(),
+        keysToRemove: ["query"],
+  });
+      router.push(newUrl, { scroll: false });
+}}
+route هذا يتحقق إذا ماكو قيمة بالبحث (يعني المستخدم حذف الكلمة) و المسار الحالي يساوي
+
+من رابط الصفحة query دالة تزيل  removeKeysFromQuery
+
+/products :النتيجة
+
+
