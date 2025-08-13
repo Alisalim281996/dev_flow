@@ -1,0 +1,58 @@
+1-we add in SocialsAuthForm the function 
+
+  const handelSignIn = async (provider: "github" | "google") => {
+    try {
+      await signIn(provider, {
+        callbackUrl: ROUTES.HOME,
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Sign-in Failed", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "An error occurred during sign-in",
+      });
+    }
+  };
+
+
+  we add in Button on click with google 
+  onClick={() => handelSignIn("google")}
+  and with github 
+  onClick={() => handelSignIn("github")}
+
+2- in general layout we Toaster inside the body 
+
+3- and we round all the content with <SessionProvider session={session}></SessionProvider> 
+
+  const session = await auth()
+
+console.log(session);
+        /* resoult:
+            user: {
+            name: 'Mps Store',
+            email: 'mpsstore24@gmail.com',
+            image: 'https://lh3.googleusercontent.com/a/ACg8ocIIgR04sLQi9SESvfS5kBeGM7uPW5BpagjNtgBFYAaSB7I4NA=s96-c'},
+            expires: '2025-09-11T16:48:13.952Z'
+        */
+
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <SessionProvider session={session}>   
+        <body
+          className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
+        >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+          <Toaster />
+        </body>
+      </SessionProvider>
+    </html>
+  );

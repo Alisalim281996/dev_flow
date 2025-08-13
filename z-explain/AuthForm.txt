@@ -1,0 +1,77 @@
+we use from shadcn react-hook-form and copy and past 
+
+to shortCut the code we add parameter when add file like 
+
+1-<OAuthForm
+    formType="Sign_IN"
+    schema={SignInSchema}
+    defaultValues={{ email: "", password: "" }}
+    onSubmit={(data) => Promise.resolve({ success: true, data })}
+/>
+
+<OAuthForm
+    formType="Sign_IN"
+    schema={SignUpSchema}
+    defaultValues={{ email: "", password: "", name: "", username: "" }}
+    onSubmit={(data) => Promise.resolve({ success: true, data })}
+/>
+
+
+type of this from react-hook-form when recipt it in OAuthForm file We should refine type it 
+
+2-interface AuthFormProps<T extends FieldValues> {
+  formType: "Sign_UP" | "Sign_IN";
+  formSchema: z.ZodType<T, any>;
+  defaultValues: T;
+  onSubmit: (data: T) => Promise<{ success: boolean }>;
+}
+
+
+3-export function OAuthForm<T extends FieldValues>({
+  formType,
+  schema,
+  defaultValues,
+  onSubmit,
+}: AuthFormProps<T>)
+
+4-const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: defaultValues as DefaultValues<T>,
+});
+
+5-const handelSubmit: SubmitHandler<T> = async () => {};
+
+const buttonText = formType === "Sign_IN" ? "Sign_IN" : "Sign_UP";
+
+6-return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handelSubmit)}>
+        {Object.keys(defaultValues).map((field) => (
+          <FormField
+            key={field}
+            control={form.control}
+            name={field as Path<T>}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  {field.name === "email"
+                    ? "Email Address"
+                    : field.name.charAt(0).toUpperCase() + field.name.slice(1)}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type={field.name === "password" ? "password" : "text"}
+                    required
+                    placeholder={field.name}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ))}
+        <Button disabled={form.formState.isSubmitting}>Submit</Button>
+      </form>
+    </Form>
+  );
