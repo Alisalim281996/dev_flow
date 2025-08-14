@@ -2,6 +2,7 @@ import LocalSearch from "@/components/search/LoacalSearch";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constant/routes";
 import Link from "next/link";
+import HomeFilter from "./filters/HomeFilter";
 
 const questions = [
   {
@@ -54,11 +55,19 @@ interface SearchParams {
 }
 
 export default async function Home({ searchParams }: SearchParams) {
-  const { query="" } = await searchParams;
+  const { query = "", filter = "" } = await searchParams;
 
-  const filterQuestion = questions.filter((question) =>
-    question.title.toLowerCase().includes(query?.toLowerCase())
-  );
+  const filterQuestion = questions.filter((question) => {
+    const matchQuery = question.title
+      .toLowerCase()
+      .includes(query?.toLowerCase());
+    const matchFilter = filter
+      ? question.tags[0].name?.toLowerCase() === filter.toLowerCase()
+      : //يطابق الفلتر tags[0].name موجود (غير فارغ) يتحقق إذا كان filter إذا كان
+        true;
+    //يعني لا يتم التصفية حسب التصنيف true يرجع filter ذا لم يكن هناك
+    return matchQuery && matchFilter;
+  });
   return (
     <>
       <section className="flex w-full flex-col-reverse justify-between sm:flex-row sm:items-center">
@@ -79,12 +88,10 @@ export default async function Home({ searchParams }: SearchParams) {
           otherClasses="flex-1"
         />
       </section>
-      {/* <HomeFilter /> */}
+      <HomeFilter />
       <div className="mt-10 flex w-full gap-6 flex-col">
         {filterQuestion.map((question) => (
-          <h1 key={question._id}>
-            {question.title}
-          </h1>
+          <h1 key={question._id}>{question.title}</h1>
         ))}
       </div>
     </>
