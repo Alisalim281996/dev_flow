@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import ROUTES from "@/constant/routes";
 import Link from "next/link";
 import HomeFilter from "./filters/HomeFilter";
+import QuestionCard from "@/components/card/QuestionCard";
 
 const questions = [
   {
@@ -63,9 +64,8 @@ export default async function Home({ searchParams }: SearchParams) {
       .includes(query?.toLowerCase());
     const matchFilter = filter
       ? question.tags[0].name?.toLowerCase() === filter.toLowerCase()
-      : //يطابق الفلتر tags[0].name موجود (غير فارغ) يتحقق إذا كان filter إذا كان
+      : 
         true;
-    //يعني لا يتم التصفية حسب التصنيف true يرجع filter ذا لم يكن هناك
     return matchQuery && matchFilter;
   });
   return (
@@ -90,8 +90,10 @@ export default async function Home({ searchParams }: SearchParams) {
       </section>
       <HomeFilter />
       <div className="mt-10 flex w-full gap-6 flex-col">
-        {filterQuestion.map((question) => (
-          <h1 key={question._id}>{question.title}</h1>
+         {filterQuestion.map((question) => (
+          <h1 key={question._id}>
+            <QuestionCard question={question} />
+          </h1>
         ))}
       </div>
     </>
