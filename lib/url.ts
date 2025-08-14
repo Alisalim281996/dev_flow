@@ -9,12 +9,8 @@ interface urlQueryParams {
 export const formUrlQuery = ({ params, key, value }: urlQueryParams) => {
 
     const queryString = qs.parse(params)
-    //"category=phones&page=2&query=samsung" يحول هذه النص 
-    //{category: "phones",page: "2",query: "samsung"} الى 
 
     queryString[key] = value
-    // queryString[query] =للقيمه التي ستعبر هنا  samsung سيقوم بتغيير قيمه 
-
     return qs.stringifyUrl({
         url: window.location.pathname,
         query: queryString

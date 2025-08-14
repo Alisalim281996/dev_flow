@@ -21,7 +21,6 @@ const HomeFilter = () => {
   const handleTypeClick = (filter: string) => {
     let newUrl = "";
     if (filter === active) {
-      // اصلا active اذا ضغطنا على الزر الذي هوه
       setActive("");
       newUrl = removeKeysFromQuery({
         params: searchParams.toString(),

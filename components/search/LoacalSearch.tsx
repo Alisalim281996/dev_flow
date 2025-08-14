@@ -34,7 +34,6 @@ const LocalSearch = ({ imgsrc, placeholder, route, otherClasses }: Props) => {
         
       } else {
         if (pathname === route) {
-          //route in this way /
           const newUrl = removeKeysFromQuery({
             params: searchParams.toString(),
             keysToRemove: ["query"],
